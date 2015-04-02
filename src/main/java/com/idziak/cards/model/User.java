@@ -12,8 +12,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "\"User\"")
-@NamedQuery(name = User.FIND_BY_NICKNAME, query = "SELECT u FROM \"User\" u WHERE u.nickname = :nickname")
+//@Table(name = "\"User\"")
+@NamedQuery(name = User.FIND_BY_NICKNAME, query = "SELECT u FROM User u WHERE u.nickname = :nickname")
 public class User implements Serializable {
 
 	public static final String FIND_BY_NICKNAME = "User.findByNickname";
