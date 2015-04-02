@@ -13,32 +13,34 @@ import com.idziak.cards.service.UserService;
 @Controller
 public class RegistrationController {
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public String registration(HttpServletRequest req) {
-		String email = req.getParameter("email");
-		String nickname = req.getParameter("nickname");
-		String password = req.getParameter("password");
+    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    public String registration(HttpServletRequest req) {
+        String email = req.getParameter("email");
+        String nickname = req.getParameter("nickname");
+        String password = req.getParameter("password");
 
-		if (email == null || nickname == null || password == null) {
-			return "incorrect";
-		}
+        if (email == null || nickname == null || password == null) {
+            return "incorrect";
+        }
 
-		User newUser = new User();
-		newUser.setNickname(nickname);
+        User newUser = new User();
+        newUser.setNickname(nickname);
+        newUser.setEmail(email);
+        newUser.setPassword(password);
 
-		boolean userCreated = userService.createUser(newUser);
+        boolean userCreated = userService.createUser(newUser);
 
-		if (!userCreated)
-			return "user_exists";
+        if (!userCreated)
+            return "user_exists";
 
-		return "registered";
-	}
+        return "registered";
+    }
 
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
 }

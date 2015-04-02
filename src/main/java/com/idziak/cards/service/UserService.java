@@ -7,7 +7,5 @@ import com.idziak.cards.model.User;
 public interface UserService {
 
 	boolean createUser(User user);
-
-	List<User> listUsers();
-
+	List<User> listUsers(int pageNr, int pageSize);
 }

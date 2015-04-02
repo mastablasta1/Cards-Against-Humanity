@@ -26,11 +26,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> listUsers() {
-		return userDao.getAll();
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
+	public List<User> listUsers(int pageNr, int pageSize) {
+		return userDao.list(pageNr, pageSize);
 	}
 }

@@ -18,6 +18,6 @@ public class RestListController {
 
 	@RequestMapping("/users")
 	public List<User> users() {
-		return userService.listUsers();
+		return userService.listUsers(1, 100);
 	}
 }

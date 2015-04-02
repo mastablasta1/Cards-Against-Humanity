@@ -13,41 +13,42 @@ import org.springframework.stereotype.Repository;
 import com.idziak.cards.model.User;
 
 @Repository
-public class UserJpaDao implements UserDao {
+public class UserJpaDao extends AbstractJpaDao<User, Long> implements UserDao {
 
-	@PersistenceContext
-	private EntityManager em;
+    @Override
+    public User findByNickname(String nickname) {
+        try {
+            TypedQuery<User> query = getEntityManager().createNamedQuery(User.FIND_BY_NICKNAME,
+                    User.class);
+            query.setParameter("nickname", nickname);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 
-	@Override
-	public void create(User user) {
-		em.persist(user);
-	}
+    @Override
+    public User findByEmail(String email) {
+        return findSingleByColumn(User.class, "email", email);
+//        try {
+//            TypedQuery<User> query = getEntityManager().createNamedQuery(User.FIND_BY_EMAIL,
+//                    User.class);
+//            query.setParameter("nickname", email);
+//            return query.getSingleResult();
+//        } catch (NoResultException e) {
+//            return null;
+//        }
+    }
 
-	@Override
-	public User get(Serializable id) {
-		return em.find(User.class, id);
-	}
-
-	@Override
-	public User findByNickname(String nickname) {
-		try {
-			TypedQuery<User> query = em.createNamedQuery(User.FIND_BY_NICKNAME,
-					User.class);
-			query.setParameter("nickname", nickname);
-			return query.getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<User> getAll() {
-		return em.createQuery("SELECT u FROM User u").getResultList();
-	}
-
-	public void setEntityManager(EntityManager entityManager) {
-		this.em = entityManager;
-	}
-
+    @Override
+    public List<User> list(int pageNr, int pageSize) {
+        try {
+            TypedQuery<User> query = getEntityManager().createQuery("select u from User u", User.class);
+            query.setFirstResult((pageNr-1)*pageSize);
+            query.setMaxResults(pageSize);
+            return query.getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }
