@@ -7,25 +7,27 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="\"User\"")
-public class User implements Serializable{
+@Table(name = "\"User\"")
+@NamedQuery(name = User.FIND_BY_NICKNAME, query = "SELECT u FROM \"User\" u WHERE u.nickname = :nickname")
+public class User implements Serializable {
+
+	public static final String FIND_BY_NICKNAME = "User.findByNickname";
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(unique=true)
-	@Size(min=4, max=32)
+
+	@Column(unique = true)
+	@Size(min = 4, max = 32)
 	private String nickname;
-	
-	@Size(min=6, max=32)
+
+	@Size(min = 6, max = 32)
 	private String password;
-	
-	
 
 	public Long getId() {
 		return id;
@@ -42,6 +44,5 @@ public class User implements Serializable{
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	
-	
+
 }

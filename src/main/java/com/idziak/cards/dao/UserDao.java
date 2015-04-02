@@ -8,7 +8,11 @@ import com.idziak.cards.model.User;
 public interface UserDao {
 
 	void create(User user);
+
 	User get(Serializable id);
+
 	List<User> getAll();
+
+	User findByNickname(String nickname);
 
 }

@@ -17,8 +17,12 @@ public class UserServiceImpl implements UserService {
 	private UserDao userDao;
 
 	@Override
-	public void createUser(User user) {
+	public boolean createUser(User user) {
+		User existing = userDao.findByNickname(user.getNickname());
+		if (existing != null)
+			return false;
 		userDao.create(user);
+		return true;
 	}
 
 	@Override

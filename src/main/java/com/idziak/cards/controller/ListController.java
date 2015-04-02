@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class ListController {
-	
+
 	@RequestMapping("/admin/listusers")
-	public String listUsers(){
+	public String listUsers() {
 		return "admin/listusers";
 	}
 }

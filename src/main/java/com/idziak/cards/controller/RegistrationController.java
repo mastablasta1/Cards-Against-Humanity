@@ -12,31 +12,33 @@ import com.idziak.cards.service.UserService;
 
 @Controller
 public class RegistrationController {
-	
+
 	@Autowired
 	private UserService userService;
-	
-	@RequestMapping(value="/registration", method=RequestMethod.POST)
-	public String registration(HttpServletRequest req){
+
+	@RequestMapping(value = "/registration", method = RequestMethod.POST)
+	public String registration(HttpServletRequest req) {
 		String email = req.getParameter("email");
 		String nickname = req.getParameter("nickname");
 		String password = req.getParameter("password");
-		
-		if(email==null || nickname==null || password==null){
+
+		if (email == null || nickname == null || password == null) {
 			return "incorrect";
 		}
-		
+
 		User newUser = new User();
 		newUser.setNickname(nickname);
-		
-		userService.createUser(newUser);
-		
+
+		boolean userCreated = userService.createUser(newUser);
+
+		if (!userCreated)
+			return "user_exists";
+
 		return "registered";
 	}
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
-	
-	
+
 }

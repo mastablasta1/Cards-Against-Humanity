@@ -8,4 +8,4 @@ $.ajax({
 		});
 		$('#userlist').html(html);
 	}
-})
+});
