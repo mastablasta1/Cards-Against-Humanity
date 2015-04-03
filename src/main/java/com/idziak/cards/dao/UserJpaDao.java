@@ -30,14 +30,6 @@ public class UserJpaDao extends AbstractJpaDao<User, Long> implements UserDao {
     @Override
     public User findByEmail(String email) {
         return findSingleByColumn(User.class, "email", email);
-//        try {
-//            TypedQuery<User> query = getEntityManager().createNamedQuery(User.FIND_BY_EMAIL,
-//                    User.class);
-//            query.setParameter("nickname", email);
-//            return query.getSingleResult();
-//        } catch (NoResultException e) {
-//            return null;
-//        }
     }
 
     @Override

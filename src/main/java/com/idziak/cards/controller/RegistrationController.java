@@ -1,6 +1,7 @@
 package com.idziak.cards.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,25 +23,23 @@ public class RegistrationController {
         String nickname = req.getParameter("nickname");
         String password = req.getParameter("password");
 
-        if (email == null || nickname == null || password == null) {
-            return "incorrect";
-        }
-
         User newUser = new User();
         newUser.setNickname(nickname);
         newUser.setEmail(email);
         newUser.setPassword(password);
 
-        boolean userCreated = userService.createUser(newUser);
+        
+        boolean userCreated;
+		try {
+			userCreated = userService.createUser(newUser);
+		} catch (ConstraintViolationException e) {
+			return "incorrect";
+		}
 
         if (!userCreated)
             return "user_exists";
 
         return "registered";
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 
 }
