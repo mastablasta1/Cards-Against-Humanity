@@ -1,6 +1,8 @@
 package com.idziak.cards.controller;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +30,25 @@ public class RegistrationController {
         newUser.setEmail(email);
         newUser.setPassword(password);
 
-        
-        boolean userCreated;
+
 		try {
-			userCreated = userService.createUser(newUser);
+			userService.createUser(newUser);
 		} catch (ConstraintViolationException e) {
-			return "incorrect";
-		}
-
-        if (!userCreated)
-            return "user_exists";
-
+            for (ConstraintViolation v : e.getConstraintViolations()) {
+                if (v.getPropertyPath().toString().equals(User.EMAIL_COLUMN))
+                    return "user_exists";
+                else if (v.getPropertyPath().toString().equals(User.NICKNAME_COLUMN))
+                    return "user_exists";
+            }
+            return "incorrect";
+        } catch (PersistenceException e){
+            if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException){
+                org.hibernate.exception.ConstraintViolationException cve = (org.hibernate.exception.ConstraintViolationException) e.getCause();
+                cve.getConstraintName();
+                return "user_exists";
+            }
+            return "incorrect";
+        }
         return "registered";
     }
 

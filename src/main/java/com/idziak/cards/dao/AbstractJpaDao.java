@@ -1,11 +1,14 @@
 package com.idziak.cards.dao;
 
+import com.idziak.cards.model.User;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 
 public abstract class AbstractJpaDao<T, PK extends Serializable> implements GenericDao<T, PK> {
 
@@ -44,16 +47,34 @@ public abstract class AbstractJpaDao<T, PK extends Serializable> implements Gene
         entityManager.remove(t);
     }
 
-    public T findSingleByColumn(Class<T> cls, String column, Serializable value) {
+    protected T findSingleByColumn(String column, Serializable value) {
         try {
             TypedQuery<T> query = getEntityManager().createNamedQuery(
-                    String.format("SELECT t FROM %s t WHERE t.%s = :%s", cls.getSimpleName(), column, column),
-                    cls);
+                    String.format("SELECT t FROM %s t WHERE t.%s = :%s", entityClass.getSimpleName(), column, column),
+                    entityClass);
             query.setParameter(column, value);
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    protected List<T> findByColumn(String column, Serializable value) {
+        try {
+            TypedQuery<T> query = getEntityManager().createNamedQuery(
+                    String.format("SELECT t FROM %s t WHERE t.%s = :%s", entityClass.getSimpleName(), column, column), entityClass);
+            query.setParameter(column, value);
+            return query.getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    protected List<T> list(int pageNr, int pageSize) {
+        TypedQuery<T> query = getEntityManager().createQuery(String.format("SELECT t FROM %s t", entityClass.getSimpleName()), entityClass);
+        query.setFirstResult((pageNr - 1) * pageSize);
+        query.setMaxResults(pageSize);
+        return query.getResultList();
     }
 
     public EntityManager getEntityManager() {

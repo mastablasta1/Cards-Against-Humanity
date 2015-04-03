@@ -17,30 +17,16 @@ public class UserJpaDao extends AbstractJpaDao<User, Long> implements UserDao {
 
     @Override
     public User findByNickname(String nickname) {
-        try {
-            TypedQuery<User> query = getEntityManager().createNamedQuery(User.FIND_BY_NICKNAME,
-                    User.class);
-            query.setParameter("nickname", nickname);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+        return findSingleByColumn(User.NICKNAME_COLUMN, nickname);
     }
 
     @Override
     public User findByEmail(String email) {
-        return findSingleByColumn(User.class, "email", email);
+        return findSingleByColumn(User.EMAIL_COLUMN, email);
     }
 
     @Override
     public List<User> list(int pageNr, int pageSize) {
-        try {
-            TypedQuery<User> query = getEntityManager().createQuery("select u from User u", User.class);
-            query.setFirstResult((pageNr-1)*pageSize);
-            query.setMaxResults(pageSize);
-            return query.getResultList();
-        } catch (NoResultException e) {
-            return null;
-        }
+        return super.list(pageNr, pageSize);
     }
 }

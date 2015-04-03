@@ -8,19 +8,16 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "\"User\"")
-@NamedQueries({
-        @NamedQuery(name = User.FIND_BY_NICKNAME, query = "SELECT u FROM User u WHERE u.nickname = :nickname"),
-        @NamedQuery(name = User.FIND_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email = :email")
-})
 public class User implements Serializable {
 
-    public static final String FIND_BY_NICKNAME = "User.findByNickname";
-    public static final String FIND_BY_EMAIL = "User.findByEmail";
+    public static final String NICKNAME_COLUMN = "nickname";
+    public static final String EMAIL_COLUMN = "email";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     @Email
     private String email;
 
