@@ -5,13 +5,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import com.idziak.cards.AlreadyExistsException;
+import com.idziak.cards.response.RegistrationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.idziak.cards.model.User;
 import com.idziak.cards.service.UserService;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class RegistrationController {
@@ -19,37 +26,29 @@ public class RegistrationController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registration(HttpServletRequest req) {
-        String email = req.getParameter("email");
-        String nickname = req.getParameter("nickname");
-        String password = req.getParameter("password");
+    @RequestMapping(value = "/registration",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<RegistrationResponse> registration(@RequestBody User newUser) {
+        if (newUser.getEmail() == null || newUser.getEmail().isEmpty()
+                || newUser.getNickname() == null || newUser.getNickname().isEmpty()
+                || newUser.getPassword() == null || newUser.getPassword().isEmpty())
+            return new ResponseEntity<RegistrationResponse>(HttpStatus.BAD_REQUEST);
 
-        User newUser = new User();
-        newUser.setNickname(nickname);
-        newUser.setEmail(email);
-        newUser.setPassword(password);
-
-
-		try {
-			userService.createUser(newUser);
-		} catch (ConstraintViolationException e) {
-            for (ConstraintViolation v : e.getConstraintViolations()) {
-                if (v.getPropertyPath().toString().equals(User.EMAIL_COLUMN))
-                    return "user_exists";
-                else if (v.getPropertyPath().toString().equals(User.NICKNAME_COLUMN))
-                    return "user_exists";
-            }
-            return "incorrect";
-        } catch (PersistenceException e){
-            if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException){
-                org.hibernate.exception.ConstraintViolationException cve = (org.hibernate.exception.ConstraintViolationException) e.getCause();
-                cve.getConstraintName();
-                return "user_exists";
-            }
-            return "incorrect";
+        try {
+            userService.createUser(newUser);
+        } catch (ConstraintViolationException e) {
+            return new ResponseEntity<RegistrationResponse>(HttpStatus.BAD_REQUEST);
+        } catch (AlreadyExistsException e) {
+            RegistrationResponse resp = new RegistrationResponse();
+            resp.setFields(e.getFields());
+            return ResponseEntity.ok(resp);
+        } catch(PersistenceException e){
+            return new ResponseEntity<RegistrationResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return "registered";
+        return new ResponseEntity<RegistrationResponse>(new RegistrationResponse(), HttpStatus.OK);
     }
 
 }

@@ -61,7 +61,7 @@ public abstract class AbstractJpaDao<T, PK extends Serializable> implements Gene
 
     protected List<T> findByColumn(String column, Serializable value) {
         try {
-            TypedQuery<T> query = getEntityManager().createNamedQuery(
+            TypedQuery<T> query = getEntityManager().createQuery(
                     String.format("SELECT t FROM %s t WHERE t.%s = :%s", entityClass.getSimpleName(), column, column), entityClass);
             query.setParameter(column, value);
             return query.getResultList();
@@ -75,6 +75,13 @@ public abstract class AbstractJpaDao<T, PK extends Serializable> implements Gene
         query.setFirstResult((pageNr - 1) * pageSize);
         query.setMaxResults(pageSize);
         return query.getResultList();
+    }
+
+    protected boolean exists(String column, String value) {
+        TypedQuery<Long> query = getEntityManager().createQuery(
+                String.format("SELECT count(1) FROM %s t WHERE t.%s = :%s", entityClass.getSimpleName(), column, column), Long.class);
+        query.setParameter(column, value);
+        return query.getSingleResult()>0;
     }
 
     public EntityManager getEntityManager() {

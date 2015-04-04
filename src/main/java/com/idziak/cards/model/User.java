@@ -1,8 +1,11 @@
 package com.idziak.cards.model;
 
+import com.idziak.cards.service.PasswordEncryptionService;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -25,8 +28,12 @@ public class User implements Serializable {
     @Size(min = 4, max = 32)
     private String nickname;
 
-    @Size(min = 6, max = 32)
+    @NotEmpty
     private String password;
+
+    @Size(min = PasswordEncryptionService.SALT_LENGTH,
+            max = PasswordEncryptionService.SALT_LENGTH)
+    private String salt;
 
     public Long getId() {
         return id;
@@ -58,5 +65,13 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 }

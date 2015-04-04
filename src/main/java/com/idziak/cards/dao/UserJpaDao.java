@@ -29,4 +29,14 @@ public class UserJpaDao extends AbstractJpaDao<User, Long> implements UserDao {
     public List<User> list(int pageNr, int pageSize) {
         return super.list(pageNr, pageSize);
     }
+
+    @Override
+    public boolean emailExists(String email) {
+        return exists(User.EMAIL_COLUMN, email);
+    }
+
+    @Override
+    public boolean nicknameExists(String nickname) {
+        return exists(User.NICKNAME_COLUMN, nickname);
+    }
 }
