@@ -26,19 +26,4 @@
 
 	<context:component-scan base-package="com.idziak.cards.controller" />
 
-	<beans:bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-		<beans:property name="exceptionMappings">
-			<beans:props>
-				<beans:prop key="java.lang.Exception">error/error</beans:prop>
-				<beans:prop key="java.lang.RuntimeException">error/error</beans:prop>
-			</beans:props>
-		</beans:property>
-		<beans:property name="statusCodes">
-			<beans:props>
-				<beans:prop key="error/404">404</beans:prop>
-				<beans:prop key="error/error">500</beans:prop>
-			</beans:props>
-		</beans:property>
-	</beans:bean>
-
 </beans:beans>

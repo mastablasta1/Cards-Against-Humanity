@@ -1,7 +1,5 @@
 package com.idziak.cards.dao;
 
-import com.idziak.cards.model.User;
-
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;

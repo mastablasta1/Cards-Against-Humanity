@@ -1,16 +1,9 @@
 package com.idziak.cards.dao;
 
-import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
-import org.springframework.stereotype.Repository;
-
 import com.idziak.cards.model.User;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserJpaDao extends AbstractJpaDao<User, Long> implements UserDao {

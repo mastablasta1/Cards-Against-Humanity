@@ -1,24 +1,35 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<%@ include file="include/header.jsp" %>
 
 <html>
 <head>
-	<title>Home</title>
+	<title>Cards Against Humanity</title>
+	<script src="${contextPath}/static/jquery.min.js" defer></script>
+	<script type="text/javascript" defer>
+		$("reg-form").submit(function(e){
+			alert("Done!");
+			e.preventDefault();
+		});
+	</script>
 </head>
 <body>
-<h1>
-	Hello world!  
-</h1>
 
-<P>  The time on the server is ${serverTime}. </P>
+<h2>Cards Against Humanity</h2>
 
-<p>Create account:</p>
-<form action="${contextPath}/registration" method="post">
-	<p>Email: <input type="email" name="email" /></p>
-	<p>Nickname: <input type="text" name="nickname" /></p>
-	<p>Password: <input type="password" name="password" /></p>
-	<p><input type="submit" value="Submit" /></p>
+<h3>Create account:</h3>
+<form id="reg-form">
+	<div>
+		<label for="reg-email">Email:</label> <input id="reg-email" type="email" name="email" />
+	</div>
+	<div><label for="reg-nickname">Nickname:</label> <input id="reg-nickname" type="text" name="nickname" /></div>
+	<div><label for="reg-password">Password:</label> <input id="reg-password" type="password" name="password" /></div>
+	<div><input type="submit" value="Submit" /></div>
+</form>
+
+<h3>Log in to your account:</h3>
+<form action="${contextPath}/" method="post">
+	<div>Email: <input type="email" name="email" /></div>
+	<div>Password: <input type="password" name="password" /></div>
+	<div><input type="submit" value="Log in" /></div>
 </form>
 
 </body>

@@ -1,11 +1,10 @@
 package com.idziak.cards.controller;
 
 import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
-import com.idziak.cards.AlreadyExistsException;
+import com.idziak.cards.exception.AlreadyExistsException;
+import com.idziak.cards.model.User;
 import com.idziak.cards.response.RegistrationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.idziak.cards.model.User;
 import com.idziak.cards.service.UserService;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -34,7 +32,7 @@ public class RegistrationController {
     public ResponseEntity<RegistrationResponse> registration(@RequestBody User newUser) {
         if (newUser.getEmail() == null || newUser.getEmail().isEmpty()
                 || newUser.getNickname() == null || newUser.getNickname().isEmpty()
-                || newUser.getPassword() == null || newUser.getPassword().isEmpty())
+                || newUser.getPassword() == null)
             return new ResponseEntity<RegistrationResponse>(HttpStatus.BAD_REQUEST);
 
         try {

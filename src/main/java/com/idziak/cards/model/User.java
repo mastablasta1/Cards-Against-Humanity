@@ -1,8 +1,6 @@
 package com.idziak.cards.model;
 
-import com.idziak.cards.service.PasswordEncryptionService;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,6 +13,8 @@ public class User implements Serializable {
 
     public static final String NICKNAME_COLUMN = "nickname";
     public static final String EMAIL_COLUMN = "email";
+    public static final String ATTEMPTED_PASSWORD = "password";
+    public static final String SESSION_ATTRIBUTE_NAME = "user";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +28,14 @@ public class User implements Serializable {
     @Size(min = 4, max = 32)
     private String nickname;
 
-    @NotEmpty
+    @Transient
     private String password;
 
-    @Size(min = PasswordEncryptionService.SALT_LENGTH,
-            max = PasswordEncryptionService.SALT_LENGTH)
-    private String salt;
+    @NotNull
+    private byte[] crypto;
+
+    @NotNull
+    private byte[] salt;
 
     public Long getId() {
         return id;
@@ -67,11 +69,19 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getSalt() {
+    public byte[] getCrypto() {
+        return crypto;
+    }
+
+    public void setCrypto(byte[] cryptoPassword) {
+        this.crypto = cryptoPassword;
+    }
+
+    public byte[] getSalt() {
         return salt;
     }
 
-    public void setSalt(String salt) {
+    public void setSalt(byte[] salt) {
         this.salt = salt;
     }
 }

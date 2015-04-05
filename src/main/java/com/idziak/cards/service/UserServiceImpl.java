@@ -3,13 +3,13 @@ package com.idziak.cards.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.idziak.cards.AlreadyExistsException;
+import com.idziak.cards.exception.AlreadyExistsException;
+import com.idziak.cards.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.idziak.cards.dao.UserDao;
-import com.idziak.cards.model.User;
 
 @Service
 @Transactional
@@ -33,12 +33,26 @@ public class UserServiceImpl implements UserService {
 
         byte[] salt = passwordEncryptionService.generateSalt();
         byte[] encryptedPassword = passwordEncryptionService.getEncryptedPassword(user.getPassword(), salt);
-		user.setPassword(new String(encryptedPassword));
+        user.setCrypto(encryptedPassword);
         userDao.create(user);
+    }
+
+    @Override
+    public User authenticateUser(String email, String attemptedPassword) {
+        User user = userDao.findByEmail(email);
+        if (user == null)
+            return null;
+        boolean authenticated = passwordEncryptionService.authenticate(attemptedPassword, user.getCrypto(), user.getSalt());
+        return authenticated ? user : null;
     }
 
     @Override
     public List<User> listUsers(int pageNr, int pageSize) {
         return userDao.list(pageNr, pageSize);
+    }
+
+    @Override
+    public User getUser(Long id) {
+        return userDao.get(id);
     }
 }

@@ -1,4 +1,4 @@
-package com.idziak.cards;
+package com.idziak.cards.exception;
 
 import java.util.List;
 
