@@ -1,4 +1,4 @@
-<%@ include file="include/header.jsp" %>
+<%@ include file="../tags/wrapper.tag" %>
 
 <html>
 <head>
