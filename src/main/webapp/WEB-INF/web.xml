@@ -16,10 +16,10 @@
 		<location>/error/notfound</location>
 	</error-page>
 
-	<error-page>
+	<!--error-page>
 		<error-code>500</error-code>
 		<location>/error/servererror</location>
-	</error-page>
+	</error-page-->
 
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
@@ -47,6 +47,6 @@
 	</servlet-mapping>
 
 	<session-config>
-		<session-timeout>5</session-timeout>
+		<session-timeout>1</session-timeout>
 	</session-config>
 </web-app>

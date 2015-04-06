@@ -24,7 +24,7 @@ public class RegistrationController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/registration",
+    @RequestMapping(value = "/register",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -34,6 +34,7 @@ public class RegistrationController {
                 || newUser.getNickname() == null || newUser.getNickname().isEmpty()
                 || newUser.getPassword() == null)
             return new ResponseEntity<RegistrationResponse>(HttpStatus.BAD_REQUEST);
+
 
         try {
             userService.createUser(newUser);

@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(User user) throws AlreadyExistsException {
+        user.setEmail(user.getEmail().toLowerCase());
         List<String> fields = new ArrayList<String>();
         if (userDao.emailExists(user.getEmail()))
             fields.add(User.EMAIL_COLUMN);
@@ -34,12 +35,13 @@ public class UserServiceImpl implements UserService {
         byte[] salt = passwordEncryptionService.generateSalt();
         byte[] encryptedPassword = passwordEncryptionService.getEncryptedPassword(user.getPassword(), salt);
         user.setCrypto(encryptedPassword);
+        user.setSalt(salt);
         userDao.create(user);
     }
 
     @Override
     public User authenticateUser(String email, String attemptedPassword) {
-        User user = userDao.findByEmail(email);
+        User user = userDao.findByEmail(email.toLowerCase());
         if (user == null)
             return null;
         boolean authenticated = passwordEncryptionService.authenticate(attemptedPassword, user.getCrypto(), user.getSalt());
