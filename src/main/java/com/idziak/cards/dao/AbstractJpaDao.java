@@ -47,7 +47,7 @@ public abstract class AbstractJpaDao<T, PK extends Serializable> implements Gene
 
     protected T findSingleByColumn(String column, Serializable value) {
         try {
-            TypedQuery<T> query = getEntityManager().createNamedQuery(
+            TypedQuery<T> query = getEntityManager().createQuery(
                     String.format("SELECT t FROM %s t WHERE t.%s = :%s", entityClass.getSimpleName(), column, column),
                     entityClass);
             query.setParameter(column, value);

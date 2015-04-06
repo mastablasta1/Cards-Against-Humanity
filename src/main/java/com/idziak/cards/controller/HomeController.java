@@ -26,32 +26,39 @@ public class HomeController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(HttpServletRequest req) {
-        HttpSession session = req.getSession(false);
-        if (session != null)
+        HttpSession session = req.getSession();
+        if (session.getAttribute(User.SESSION_ATTRIBUTE_NAME)!=null)
             return "forward:/board";
         return "home";
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<String> login(HttpServletRequest req, Model model) {
+    public String login(HttpServletRequest req, Model model) {
+        if(req.getSession().getAttribute(User.SESSION_ATTRIBUTE_NAME)!=null)
+            return "forward:/board";
+
         String email = req.getParameter(User.EMAIL_COLUMN);
         String password = req.getParameter(User.ATTEMPTED_PASSWORD);
 
         if(email==null || password==null)
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            return "forward:/error/badrequest";
 
         User user = userService.authenticateUser(email, password);
         if(user!=null){
             HttpSession newSession = req.getSession();
             newSession.setAttribute(User.SESSION_ATTRIBUTE_NAME, user);
-            return ResponseEntity.ok("forward:/board");
+            return "forward:/board";
         }
         model.addAttribute("login", "incorrect");
-        return ResponseEntity.ok("home");
+        return "home";
     }
 
-    @RequestMapping(value = "/board", method = RequestMethod.GET)
+    @RequestMapping(value = "/board", method = {RequestMethod.POST, RequestMethod.GET})
     public String board(HttpServletRequest req) {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute(User.SESSION_ATTRIBUTE_NAME);
+        if(user==null)
+            return "redirect:/";
         return "board";
     }
 

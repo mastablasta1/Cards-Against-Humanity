@@ -1,12 +1,6 @@
-<%@ include file="../tags/wrapper.tag" %>
-
-<html>
-<head>
-    <title>Let's play - Cards Against Humanity</title>
-</head>
-<body>
-  <h3>You're logged in, <c:out value="${nickname}" />! Let's play some cards!</h3>
+<%@ include file="/WEB-INF/views/include/phead.jsp" %>
 
 
-</body>
-</html>
+<t:wrapper pageTitle="Game board">
+    <h3>You're logged in, <c:out value="${nickname}"/>! Let's play some cards!</h3>
+</t:wrapper>

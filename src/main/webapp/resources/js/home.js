@@ -11,12 +11,15 @@ $("#reg-form").submit(function (e) {
             });
             return JSON.stringify(data);
         })(),
-        success: processRegister
+        success: registerReaction
     });
     e.preventDefault();
 });
 
-var processRegister = function (resp) {
-    if(resp['status']=='ok')
-        return true;
+
+var registerReaction = function (resp) {
+    if (resp['status'] == 'ok') {
+        $('#reg-form').hide();
+        $('#reg-msg').html('<p>Dear, ...! You registered successfully! To activate your account enter a link provided in the email sent on ....</p>').removeClass('hidden');
+    }
 };

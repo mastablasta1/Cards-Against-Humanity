@@ -33,6 +33,7 @@
 
                             <button type="submit" class="btn btn-default">Submit</button>
                         </form>
+                        <div id="reg-msg" class="hidden"></div>
                     </div>
 
                     <div class="col-sm-6">
