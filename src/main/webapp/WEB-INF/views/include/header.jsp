@@ -7,3 +7,4 @@
 <c:set var="bootstrapJs" value="${staticPath}/js/bootstrap.min.js" />
 <c:set var="jQuery" value="${staticPath}/js/jquery.min.js" />
 <!DOCTYPE html>
+
